@@ -3,16 +3,69 @@
            https://api.github.com/users/<your name>
 */
 
-/* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
 
-   Skip to Step 3.
-*/
+const cardCreator = (user) => {
+  const newCard = document.createElement('div');
+  const newCardImg = document.createElement('img');
+  const newCardInfo = document.createElement('div');
+  const newCardName = document.createElement('h2');
+  const newCardUserName = document.createElement('h3');
+  const newCardLocation = document.createElement('p');
+  const newCardProfile = document.createElement('p');
+  const newCardFollowers = document.createElement('p');
+  const newCardFollowing = document.createElement('p');
+  const newCardBio = document.createElement('p');
 
-/* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
+  newCard.classList.add('card');
+  newCardName.classList.add('name');
+  newCardUserName.classList.add('username');
+
+  newCardImg.src = user.avatar_url;
+  newCardName.textContent = user.name;
+  newCardUserName.textContent = user.login;
+  newCardLocation.textContent = `Location: ${user.location}`;
+  newCardProfile.textContent = `Profile: ${user.url}`;
+  newCardFollowers.textContent = `Followers: ${user.followers}`;
+  newCardFollowing.textContent = `Following: ${user.following}`;
+  newCardBio.textContent = `Bio: ${user.bio}`;
+
+
+  newCard.appendChild(newCardImg);
+  newCard.appendChild(newCardInfo);
+  newCardInfo.appendChild(newCardName);
+  newCardInfo.appendChild(newCardUserName);
+  newCardInfo.appendChild(newCardLocation);
+  newCardInfo.appendChild(newCardProfile);
+  newCardInfo.appendChild(newCardFollowers);
+  newCardInfo.appendChild(newCardFollowing);
+  newCardInfo.appendChild(newCardBio);
+
+  return newCard;
+}
+
+// entry point
+entryPoint = document.querySelector('.cards');
+
+// axios promise
+
+axios.get('https://api.github.com/users/mahagold11')
+  .then( response => {
+    console.log('response', response.data);
+
+    userCard = response.data;
+    let newUserCard = cardCreator(userCard);
+    entryPoint.appendChild(newUserCard);
+
+  })
+  .catch( err => {
+    console.log('error')
+})
+
+
+
+
+
+
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -25,6 +78,25 @@
 */
 
 const followersArray = [];
+
+
+axios.get('https://api.github.com/users/bradzickafoose/followers')
+  .then( response => {
+    console.log('response', response);
+
+    response.data.forEach( item => {
+      entryPoint.appendChild(cardCreator(item))
+    })
+
+    // userCard = response.data;
+    // let newUserCard = cardCreator(userCard);
+    // entryPoint.appendChild(newUserCard);
+
+  })
+  .catch( err => {
+    console.log('error')
+})
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
